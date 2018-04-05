@@ -3,13 +3,16 @@ Mock App Back-end [![Build Status][ci-img]][ci] [![Coverage Status][cov-img]][co
 
 ## Install
 Go installer can be found [here](https://golang.org/doc/install).
-
-## Build
-Gorilla Mux is needed and can be installed with the following command:
+The following packages are needed:
 ```
 go get github.com/gorilla/mux
+go get github.com/modocache/gover
+go get github.com/mattn/goveralls
+go get golang.org/x/tools/cmd/cover
+go get github.com/golang/dep/cmd/dep
 ```
-To build the mock:
+
+## Build
 ```
 cd cmd
 go build
