@@ -25,7 +25,7 @@ func GetDummyData() []Hospital {
 		var oncologieSamaritain = Department{ID: next(), Name: "Oncologie", Hospital: samaritain}
 		var dermatologieSamaritain = Department{ID: next(), Name: "Dermatologie", Hospital: samaritain}
 		chuv.Departments = []Department{natalitesChuv, radiologieChuv}
-		chuv.Departments = []Department{oncologieSamaritain, dermatologieSamaritain}
+		samaritain.Departments = []Department{oncologieSamaritain, dermatologieSamaritain}
 
 		// We create doctors
 		var janeDoe = Doctor{ID: next(), FirstName: "Jane", LastName: "Doe", Departments: []Department{natalitesChuv}}
