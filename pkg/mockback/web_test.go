@@ -28,3 +28,7 @@ func TestRoot(t *testing.T) {
 	var m = ResponseWriterMock{t: t, expected: "It works!"}
 	Root(&m, nil)
 }
+
+func TestDummyData(t *testing.T) {
+	assert.True(t, len(GetDummyData()) == 2)
+}
