@@ -31,4 +31,5 @@ func TestRoot(t *testing.T) {
 
 func TestDummyData(t *testing.T) {
 	assert.True(t, len(GetDummyData()) == 2)
+	assert.Equal(t, "Mariusz", GetDummyData()[0].Departments[0].Doctors[0].Patients[0].FirstName)
 }

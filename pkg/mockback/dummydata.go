@@ -24,18 +24,12 @@ func GetDummyData() []Hospital {
 		var radiologieChuv = Department{ID: next(), Name: "Radiologie", Hospital: chuv}
 		var oncologieSamaritain = Department{ID: next(), Name: "Oncologie", Hospital: samaritain}
 		var dermatologieSamaritain = Department{ID: next(), Name: "Dermatologie", Hospital: samaritain}
-		chuv.Departments = []Department{natalitesChuv, radiologieChuv}
-		samaritain.Departments = []Department{oncologieSamaritain, dermatologieSamaritain}
 
 		// We create doctors
 		var janeDoe = Doctor{ID: next(), FirstName: "Jane", LastName: "Doe", Departments: []Department{natalitesChuv}}
 		var johnDoe = Doctor{ID: next(), FirstName: "John", LastName: "Doe", Departments: []Department{radiologieChuv}}
 		var gregoryHouse = Doctor{ID: next(), FirstName: "Gregory", LastName: "House", Departments: []Department{oncologieSamaritain, dermatologieSamaritain}}
 		var jamesWilson = Doctor{ID: next(), FirstName: "James", LastName: "Wilson", Departments: []Department{oncologieSamaritain}}
-		natalitesChuv.Doctors = []Doctor{janeDoe}
-		radiologieChuv.Doctors = []Doctor{johnDoe}
-		oncologieSamaritain.Doctors = []Doctor{gregoryHouse, jamesWilson}
-		dermatologieSamaritain.Doctors = []Doctor{gregoryHouse}
 
 		// We create patients
 		var mariuszWiesniewski = Patient{ID: next(), FirstName: "Mariusz", LastName: "Wiesniwski", AVSNumber: "756.1234.3333.55",
@@ -46,10 +40,18 @@ func GetDummyData() []Hospital {
 			BirthDate: time.Date(1984, time.December, 3, 0, 0, 0, 0, time.UTC), Doctors: []Doctor{johnDoe}}
 		var christopheFrattino = Patient{ID: next(), FirstName: "Christophe", LastName: "Frattino", AVSNumber: "420.1337.1337.42",
 			BirthDate: time.Date(1985, time.August, 8, 0, 0, 0, 0, time.UTC), Doctors: []Doctor{jamesWilson, gregoryHouse}}
+
+		// We create the links back
 		janeDoe.Patients = []Patient{mariuszWiesniewski, naimengLiu}
 		johnDoe.Patients = []Patient{julienRoch}
 		gregoryHouse.Patients = []Patient{christopheFrattino}
 		jamesWilson.Patients = []Patient{christopheFrattino}
+		natalitesChuv.Doctors = []Doctor{janeDoe}
+		radiologieChuv.Doctors = []Doctor{johnDoe}
+		oncologieSamaritain.Doctors = []Doctor{gregoryHouse, jamesWilson}
+		dermatologieSamaritain.Doctors = []Doctor{gregoryHouse}
+		chuv.Departments = []Department{natalitesChuv, radiologieChuv}
+		samaritain.Departments = []Department{oncologieSamaritain, dermatologieSamaritain}
 
 		// We "persist" it for next call
 		dummyData = []Hospital{chuv, samaritain}
