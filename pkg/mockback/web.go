@@ -28,13 +28,22 @@ func ListHospitals(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Sse returns Server-Send events every minute. For now, it's just a dummy answer since I didn't find a good SSE library compatible with Gorilla Mux
+func Sse(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/event-stream; charset=utf-8")
+	fmt.Fprintf(w, "A message")
+}
+
 // InitWeb initializes the web service
 func InitWeb() {
 	var r = mux.NewRouter()
 	r.HandleFunc("/", Root)
 	r.HandleFunc("/hospitals", ListHospitals)
+	r.HandleFunc("/events/channel-1", Sse)
 	var c = cors.New(cors.Options{
-		AllowedOrigins: []string{"http://localhost:4200"},
+		AllowedOrigins:   []string{"http://localhost:4200"},
+		AllowCredentials: true,
+		Debug:            true,
 	})
 	var h = c.Handler(r)
 	log.Fatal(http.ListenAndServe(":8000", h))
