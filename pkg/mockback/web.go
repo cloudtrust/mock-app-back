@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 )
 
 // Root returns a dummy message to confirm the web server works
@@ -32,5 +33,9 @@ func InitWeb() {
 	var r = mux.NewRouter()
 	r.HandleFunc("/", Root)
 	r.HandleFunc("/hospitals", ListHospitals)
-	log.Fatal(http.ListenAndServe(":8000", r))
+	var c = cors.New(cors.Options{
+		AllowedOrigins: []string{"http://localhost:4200"},
+	})
+	var h = c.Handler(r)
+	log.Fatal(http.ListenAndServe(":8000", h))
 }
