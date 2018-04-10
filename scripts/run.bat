@@ -1,5 +1,5 @@
 @echo off
-cd /D %~dp0
+cd /D %~dp0/../bin/
 echo Running mock-app-back...
-"../bin/mockappback.exe"
-pause
+mockappback.exe
+cd /D %~dp0
