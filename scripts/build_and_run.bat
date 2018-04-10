@@ -2,5 +2,5 @@
 cd /D %~dp0
 call build.bat
 pause
-"../bin/mockappback.exe"
+call run.bat
 pause
