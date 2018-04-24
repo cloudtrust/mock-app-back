@@ -1,3 +1,4 @@
 /**/*.exe
 pkg/mockback/debug.test
 cmd/debug
+cmd/cmd
