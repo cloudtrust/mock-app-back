@@ -2,11 +2,14 @@ package mockback
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 
+	"github.com/go-kit/kit/endpoint"
+	http_transport "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 )
@@ -28,12 +31,28 @@ func ListHospitals(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// MakeListAllPatientsHandler makes a HTTP handler for the ListAllPatients endpoint.
+func MakeListAllPatientsHandler(e endpoint.Endpoint) *http_transport.Server {
+	return http_transport.NewServer(e,
+		decodeHTTPRequest,
+		encodeHTTPReply,
+		http_transport.ServerErrorEncoder(httpErrorHandler),
+	)
+}
+
 // InitWeb initializes the web server
-func InitWeb() error {
+func InitWeb(endpoints Endpoints) error {
 	log.Print("Starting web server...")
 	var r = mux.NewRouter()
 	r.HandleFunc("/", Root)
 	r.HandleFunc("/hospitals", ListHospitals)
+
+	var listAllPatientsHandler http.Handler
+	{
+		listAllPatientsHandler = MakeListAllPatientsHandler(endpoints.ListAllPatientsEndpoint)
+	}
+	r.Handle("/patients", listAllPatientsHandler)
+
 	var c = cors.New(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:4200"},
 		AllowCredentials: true,
@@ -41,4 +60,22 @@ func InitWeb() error {
 	})
 	var h = c.Handler(r)
 	return http.ListenAndServe(":8000", h)
+}
+
+// decodeHTTPRequest decodes the flatbuffer flaki request.
+func decodeHTTPRequest(_ context.Context, req *http.Request) (interface{}, error) {
+	return req.Body, nil
+}
+
+// encodeHTTPReply encodes the flatbuffer flaki reply.
+func encodeHTTPReply(_ context.Context, w http.ResponseWriter, rep interface{}) error {
+	fmt.Fprintf(w, "%s", rep)
+	return nil
+}
+
+// httpErrorHandler encodes the flatbuffer flaki reply when there is an error.
+func httpErrorHandler(ctx context.Context, err error, w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "application/octet-stream")
+	w.WriteHeader(http.StatusInternalServerError)
+	w.Write([]byte(err.Error()))
 }
