@@ -15,6 +15,33 @@ go get github.com/rs/cors
 ```
 Checkout the code in $GOPATH/src/github.com/cloudtrust/mock-app-back/
 
+## CockroachDB
+### Install
+```
+wget -qO- https://binaries.cockroachdb.com/cockroach-v2.0.1.linux-amd64.tgz | tar  xvz
+cp -i cockroach-v2.0.1.linux-amd64/cockroach /usr/local/bin
+mkdir /cloudtrust/cockroach/
+```
+
+### Run node
+```
+cd /cloudtrust/cockroach/
+cockroach start --insecure --host=localhost
+```
+Cockroach can be monitored via [this page](http://localhost:8080/).
+
+### Create DB
+```
+cockroach sql --insecure
+```
+```
+CREATE DATABASE mockappdb;
+CREATE USER mockappuser;
+GRANT ALL ON DATABASE mockappdb TO mockappuser;
+```
+
+###
+
 ## Build
 ```
 cd cmd

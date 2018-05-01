@@ -4,12 +4,28 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
+	"os"
+	"os/signal"
+	"syscall"
+	"log"
 
 	"github.com/cloudtrust/mock-app-back/pkg/mockback"
 )
 
 func main() {
-	go mockback.InitSseEndpoint()
+
+	// Critical errors channel.
+	var errc = make(chan error)
+	go func() {
+		var c = make(chan os.Signal, 1)
+		signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
+		errc <- fmt.Errorf("%s", <-c)
+	}()
+
+	go func() {
+		errc <- mockback.InitSseEndpoint()
+	}()
+
 	go func() {
 		rand.Seed(42)
 		for {
@@ -18,5 +34,9 @@ func main() {
 		}
 	}()
 
-	mockback.InitWeb()
+	go func() {
+		errc <- mockback.InitWeb()
+	}()
+
+	log.Fatal(<-errc)
 }

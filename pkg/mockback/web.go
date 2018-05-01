@@ -29,7 +29,7 @@ func ListHospitals(w http.ResponseWriter, r *http.Request) {
 }
 
 // InitWeb initializes the web server
-func InitWeb() {
+func InitWeb() error {
 	log.Print("Starting web server...")
 	var r = mux.NewRouter()
 	r.HandleFunc("/", Root)
@@ -40,5 +40,5 @@ func InitWeb() {
 		Debug:            true,
 	})
 	var h = c.Handler(r)
-	log.Fatal(http.ListenAndServe(":8000", h))
+	return http.ListenAndServe(":8000", h)
 }

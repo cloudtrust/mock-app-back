@@ -12,7 +12,7 @@ import (
 var server *sse.Server
 
 // InitSseEndpoint initializes the SSE Endpoint
-func InitSseEndpoint() {
+func InitSseEndpoint() error {
 
 	log.Print("Starting SSE Endpoint...")
 
@@ -31,7 +31,7 @@ func InitSseEndpoint() {
 	})
 	var h = c.Handler(server)
 
-	log.Fatal(http.ListenAndServe(":3000", h))
+	return http.ListenAndServe(":3000", h)
 }
 
 // SendMessage sends a message "message" on channel "channel"
