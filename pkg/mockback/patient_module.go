@@ -2,6 +2,7 @@ package mockback
 
 import (
 	"context"
+	"database/sql"
 	"time"
 )
 
@@ -10,7 +11,13 @@ type PatientModule interface {
 	ListAllPatients(ctx context.Context) []Patient
 }
 
+type cockroach interface {
+	Exec(query string, args ...interface{}) (sql.Result, error)
+	QueryRow(query string, args ...interface{}) *sql.Row
+}
+
 type patientModule struct {
+	cockroachConn cockroach
 }
 
 func (c *patientModule) ListAllPatients(ctx context.Context) []Patient {
@@ -28,6 +35,8 @@ func (c *patientModule) ListAllPatients(ctx context.Context) []Patient {
 }
 
 // NewPatientModule returns a patient module
-func NewPatientModule() PatientModule {
-	return &patientModule{}
+func NewPatientModule(cockroachConn cockroach) PatientModule {
+	return &patientModule{
+		cockroachConn: cockroachConn,
+	}
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"math/rand"
@@ -11,6 +12,7 @@ import (
 
 	"github.com/cloudtrust/mock-app-back/pkg/mockback"
 	"github.com/go-kit/kit/endpoint"
+	_ "github.com/lib/pq"
 )
 
 func main() {
@@ -23,10 +25,26 @@ func main() {
 		errc <- fmt.Errorf("%s", <-c)
 	}()
 
+	// We establish the cockroach connection
+	type Cockroach interface {
+		Exec(query string, args ...interface{}) (sql.Result, error)
+		QueryRow(query string, args ...interface{}) *sql.Row
+	}
+	var cockroachConn Cockroach
+	var err error
+	log.Print("Connecting to database...")
+	cockroachConn, err = sql.Open("postgres", fmt.Sprintf("postgresql://%s:%s@%s/%s?sslmode=disable", "root", "", "localhost:26257", "mockappdb"))
+	if err != nil {
+		log.Fatal(err)
+		return
+	} else {
+		log.Print("Connected!")
+	}
+
 	// We create the modules
 	var patientModule mockback.PatientModule
 	{
-		patientModule = mockback.NewPatientModule()
+		patientModule = mockback.NewPatientModule(cockroachConn)
 	}
 
 	// We create the business components
