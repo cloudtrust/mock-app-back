@@ -5,14 +5,18 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
 	"github.com/cloudtrust/mock-app-back/pkg/mockback"
+	"github.com/cloudtrust/mock-app-back/pkg/patients"
 	"github.com/go-kit/kit/endpoint"
+	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -42,30 +46,44 @@ func main() {
 	}
 
 	// We create the modules
-	var patientModule mockback.PatientModule
+	var patientModule patients.Module
 	{
-		patientModule = mockback.NewPatientModule(cockroachConn)
+		patientModule = patients.NewModule(cockroachConn)
 	}
 
 	// We create the business components
-	var patientComponent mockback.PatientComponent
+	var patientComponent patients.Component
 	{
-		patientComponent = mockback.NewPatientComponent(patientModule)
+		patientComponent = patients.NewComponent(patientModule)
 	}
 
 	// We create the endpoints
 	var listAllPatientsEndpoint endpoint.Endpoint
 	{
-		listAllPatientsEndpoint = mockback.MakeListAllPatientsEndpoint(patientComponent)
-	}
-
-	var endpoints = mockback.Endpoints{
-		ListAllPatientsEndpoint: listAllPatientsEndpoint,
+		listAllPatientsEndpoint = patients.MakeListAllPatientsEndpoint(patientComponent)
 	}
 
 	// We create the HTTP server
 	go func() {
-		errc <- mockback.InitWeb(endpoints)
+		log.Print("Starting web server...")
+		var r = mux.NewRouter()
+
+		// We handle the endpoints
+		var listAllPatientsHandler http.Handler
+		{
+			listAllPatientsHandler = patients.MakeListAllPatientsHandler(listAllPatientsEndpoint)
+		}
+		r.Handle("/patients", listAllPatientsHandler)
+
+		// We let the front-end access the back-end
+		var c = cors.New(cors.Options{
+			AllowedOrigins:   []string{"http://localhost:4200"},
+			AllowCredentials: true,
+			Debug:            true,
+		})
+		var h = c.Handler(r)
+
+		errc <- http.ListenAndServe(":8000", h)
 	}()
 
 	// We create the SSE Enpoint (wip)

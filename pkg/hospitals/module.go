@@ -1,6 +1,4 @@
-package mockback
-
-import "time"
+package hospitals
 
 // Hospital represents a hospital
 type Hospital struct {
@@ -24,15 +22,5 @@ type Doctor struct {
 	FirstName   string       `json:"firstName"`
 	LastName    string       `json:"lastName"`
 	Departments []Department `json:"-"`
-	Patients    []Patient    `json:"patients"`
-}
-
-// Patient represents a patient
-type Patient struct {
-	ID        int32     `json:"id"`
-	FirstName string    `json:"firstName"`
-	LastName  string    `json:"lastName"`
-	BirthDate time.Time `json:"birthDate"`
-	AVSNumber string    `json:"avsNumber"`
-	Doctors   []Doctor  `json:"-"`
+	PatientsIds []int32      `json:"patients"`
 }

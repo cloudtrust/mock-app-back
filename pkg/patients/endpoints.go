@@ -1,4 +1,4 @@
-package mockback
+package patients
 
 import (
 	"context"
@@ -12,8 +12,8 @@ type Endpoints struct {
 }
 
 // MakeListAllPatientsEndpoint makes the ListAllPatientsEndpoint.
-func MakeListAllPatientsEndpoint(patientComponent PatientComponent) endpoint.Endpoint {
+func MakeListAllPatientsEndpoint(component Component) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
-		return patientComponent.ListAllPatients(ctx), nil
+		return component.ListAll(ctx), nil
 	}
 }
