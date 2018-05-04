@@ -69,7 +69,14 @@ func decodeHTTPRequest(_ context.Context, req *http.Request) (interface{}, error
 
 // encodeHTTPReply encodes the flatbuffer flaki reply.
 func encodeHTTPReply(_ context.Context, w http.ResponseWriter, rep interface{}) error {
-	fmt.Fprintf(w, "%s", rep)
+	var b bytes.Buffer
+	var enc = json.NewEncoder(&b)
+	enc.SetIndent("", "  ")
+	if err := enc.Encode(rep); err != nil {
+		http.Error(w, err.Error(), 500)
+		return err
+	}
+	fmt.Fprintf(w, "%s", b.String())
 	return nil
 }
 

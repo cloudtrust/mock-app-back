@@ -1,6 +1,8 @@
 package mockback
 
-import "context"
+import (
+	"context"
+)
 
 // PatientComponent is the patient business component interface.
 type PatientComponent interface {
@@ -13,7 +15,7 @@ type patientComponent struct {
 }
 
 func (c *patientComponent) ListAllPatients(ctx context.Context) []Patient {
-	return []Patient{}
+	return c.patientModule.ListAllPatients(ctx)
 }
 
 // NewPatientComponent returns a patient business component
