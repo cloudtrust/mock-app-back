@@ -14,6 +14,6 @@ type Endpoints struct {
 // MakeListAllPatientsEndpoint makes the ListAllPatientsEndpoint.
 func MakeListAllPatientsEndpoint(component Component) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
-		return component.ListAll(ctx), nil
+		return component.ListAll(ctx)
 	}
 }

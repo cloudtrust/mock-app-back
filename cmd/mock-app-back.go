@@ -33,6 +33,7 @@ func main() {
 	type Cockroach interface {
 		Exec(query string, args ...interface{}) (sql.Result, error)
 		QueryRow(query string, args ...interface{}) *sql.Row
+		Query(query string, args ...interface{}) (*sql.Rows, error)
 	}
 	var cockroachConn Cockroach
 	var err error
@@ -45,10 +46,20 @@ func main() {
 		log.Print("Connected!")
 	}
 
+	// We create the database modules
+	var patientDatabase *patients.CockroachModule
+	{
+		patientDatabase, err = patients.InitDatabase(cockroachConn)
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
+	}
+
 	// We create the modules
 	var patientModule patients.Module
 	{
-		patientModule = patients.NewModule(cockroachConn)
+		patientModule = patients.NewModule(*patientDatabase)
 	}
 
 	// We create the business components
@@ -86,7 +97,7 @@ func main() {
 		errc <- http.ListenAndServe(":8000", h)
 	}()
 
-	// We create the SSE Enpoint (wip)
+	// We create the SSE Enpoint (WIP)
 	go func() {
 		errc <- mockback.InitSseEndpoint()
 	}()

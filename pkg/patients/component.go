@@ -6,7 +6,7 @@ import (
 
 // Component is the patient business component interface.
 type Component interface {
-	ListAll(context.Context) []Patient
+	ListAll(context.Context) ([]Patient, error)
 }
 
 // component is the patient business component.
@@ -14,7 +14,7 @@ type component struct {
 	module Module
 }
 
-func (c *component) ListAll(ctx context.Context) []Patient {
+func (c *component) ListAll(ctx context.Context) ([]Patient, error) {
 	return c.module.ListAll(ctx)
 }
 
