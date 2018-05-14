@@ -3,23 +3,55 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"math/rand"
 	"net/http"
 	"os"
 	"os/signal"
+	"sort"
 	"syscall"
 	"time"
 
+	sse "github.com/alexandrevicenzi/go-sse"
 	"github.com/cloudtrust/mock-app-back/pkg/mockback"
 	"github.com/cloudtrust/mock-app-back/pkg/patients"
 	"github.com/go-kit/kit/endpoint"
+	"github.com/go-kit/kit/log"
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
 	"github.com/rs/cors"
+	"github.com/spf13/pflag"
+	"github.com/spf13/viper"
 )
 
 func main() {
+
+	// Logger.
+	var logger = log.NewJSONLogger(os.Stdout)
+	{
+		logger = log.With(logger, "ts", log.DefaultTimestampUTC, "caller", log.DefaultCaller)
+	}
+	defer logger.Log("msg", "goodbye")
+
+	// Configurations.
+	var c = config(log.With(logger, "unit", "config"))
+	var (
+		// Component
+		httpAddr = c.GetString("component-http-host-port")
+		sseAddr  = c.GetString("component-sse-host-port")
+
+		// Cockroach
+		cockroachHostPort   = c.GetString("cockroach-host-port")
+		cockroachUsername   = c.GetString("cockroach-username")
+		cockroachPassword   = c.GetString("cockroach-password")
+		cockroachPatientsDB = c.GetString("cockroach-patients-database")
+
+		// HTTP
+		httpAllowedOrigin = c.GetString("http-allowed-origin")
+		httpPatients      = c.GetString("http-patients")
+
+		// SSE
+		sseEvents = c.GetString("sse-events")
+	)
 
 	// Critical errors channel.
 	var errc = make(chan error)
@@ -29,7 +61,7 @@ func main() {
 		errc <- fmt.Errorf("%s", <-c)
 	}()
 
-	// We establish the cockroach connection
+	// We establish the cockroach connection.
 	type Cockroach interface {
 		Exec(query string, args ...interface{}) (sql.Result, error)
 		QueryRow(query string, args ...interface{}) *sql.Row
@@ -37,26 +69,26 @@ func main() {
 	}
 	var cockroachConn Cockroach
 	var err error
-	log.Print("Connecting to database...")
-	cockroachConn, err = sql.Open("postgres", fmt.Sprintf("postgresql://%s:%s@%s/%s?sslmode=disable", "root", "", "localhost:26257", "mockappdb"))
+	logger.Log("msg", "Connecting to database...")
+	cockroachConn, err = sql.Open("postgres", fmt.Sprintf("postgresql://%s:%s@%s/%s?sslmode=disable", cockroachUsername, cockroachPassword, cockroachHostPort, cockroachPatientsDB))
 	if err != nil {
-		log.Fatal(err)
+		logger.Log("error", err)
 		return
 	} else {
-		log.Print("Connected!")
+		logger.Log("msg", "Connected!")
 	}
 
-	// We create the database modules
+	// We create the database modules.
 	var patientDatabase *patients.CockroachModule
 	{
 		patientDatabase, err = patients.InitDatabase(cockroachConn)
 		if err != nil {
-			log.Fatal(err)
+			logger.Log("error", err)
 			return
 		}
 	}
 
-	// We create the modules
+	// We create the modules.
 	var patientModule patients.Module
 	{
 		patientModule = patients.NewModule(*patientDatabase)
@@ -76,7 +108,7 @@ func main() {
 
 	// We create the HTTP server
 	go func() {
-		log.Print("Starting web server...")
+		logger.Log("msg", "Starting web server...")
 		var r = mux.NewRouter()
 
 		// We handle the endpoints
@@ -84,30 +116,100 @@ func main() {
 		{
 			listAllPatientsHandler = patients.MakeListAllPatientsHandler(listAllPatientsEndpoint)
 		}
-		r.Handle("/patients", listAllPatientsHandler)
+		r.Handle(httpPatients, listAllPatientsHandler)
 
 		// We let the front-end access the back-end
 		var c = cors.New(cors.Options{
-			AllowedOrigins:   []string{"http://localhost:4200"},
+			AllowedOrigins:   []string{httpAllowedOrigin},
 			AllowCredentials: true,
 			Debug:            true,
 		})
 		var h = c.Handler(r)
 
-		errc <- http.ListenAndServe(":8000", h)
+		errc <- http.ListenAndServe(httpAddr, h)
 	}()
 
+	var server *sse.Server
+
 	// We create the SSE Enpoint (WIP)
+	// Note : No need to review this : This is just a PoC that will be turned into something useful eventually.
 	go func() {
-		errc <- mockback.InitSseEndpoint()
+		logger.Log("msg", "Starting SSE Endpoint...")
+
+		// Create the server.
+		server = sse.NewServer(nil)
+		defer server.Shutdown()
+
+		// Register with /events endpoint.
+		http.Handle(sseEvents, server)
+
+		// We allow the front-end to access the endpoint
+		var c = cors.New(cors.Options{
+			AllowedOrigins:   []string{httpAllowedOrigin},
+			AllowCredentials: true,
+			Debug:            true,
+		})
+		var h = c.Handler(server)
+
+		errc <- http.ListenAndServe(sseAddr, h)
 	}()
 	go func() {
 		rand.Seed(42)
 		for {
 			time.Sleep(time.Duration(5) * time.Second)
-			mockback.SendMessage(1, fmt.Sprintf("Ping %d!", rand.Intn(9999)))
+			mockback.SendMessage(server, logger, sseEvents, 1, fmt.Sprintf("Ping %d!", rand.Intn(9999)))
 		}
 	}()
 
-	log.Fatal(<-errc)
+	logger.Log("error", <-errc)
+}
+
+func config(logger log.Logger) *viper.Viper {
+	logger.Log("msg", "load configuration and command args")
+
+	var v = viper.New()
+
+	// Component default.
+	v.SetDefault("config-file", "./configs/mock-app-back.yml")
+	v.SetDefault("component-http-host-port", "0.0.0.0:8000")
+	v.SetDefault("component-sse-host-port", "0.0.0.0:3000")
+
+	// Cockroach.
+	v.SetDefault("cockroach", false)
+	v.SetDefault("cockroach-host-port", "")
+	v.SetDefault("cockroach-username", "")
+	v.SetDefault("cockroach-password", "")
+	v.SetDefault("cockroach-patients-database", "")
+
+	// HTTP.
+	v.SetDefault("http-allowed-origin", "http://localhost:4200")
+	v.SetDefault("http-patients", "/patients")
+
+	// SSE.
+	v.SetDefault("sse-events", "/events")
+
+	// First level of override.
+	pflag.String("config-file", v.GetString("config-file"), "The configuration file path can be relative or absolute.")
+	v.BindPFlag("config-file", pflag.Lookup("config-file"))
+	pflag.Parse()
+
+	// Load config.
+	v.SetConfigFile(v.GetString("config-file"))
+	var err = v.ReadInConfig()
+	if err != nil {
+		logger.Log("error", err)
+	}
+
+	// If the host/port is not set, we consider the components deactivated.
+	v.Set("cockroach", v.GetString("cockroach-host-port") != "")
+
+	// Log config in alphabetical order.
+	var keys = v.AllKeys()
+	sort.Strings(keys)
+
+	for _, k := range keys {
+		logger.Log(k, v.Get(k))
+	}
+
+	return v
 }

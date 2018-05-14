@@ -1,3 +1,17 @@
 # Component configs
 component-name: mock-app-back
 component-http-host-port: 0.0.0.0:8000
+component-sse-host-port: 0.0.0.0:3000
+
+# Cockroach configs
+cockroach-host-port: localhost:26257
+cockroach-username: root
+cockroach-password: 
+cockroach-patients-database: mockappdb
+
+# HTTP config
+http-allowed-origin: http://localhost:4200
+http-patients: /patients
+
+## SSE config
+sse-events: /events

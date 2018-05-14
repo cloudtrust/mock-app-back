@@ -2,7 +2,6 @@ package patients
 
 import (
 	"database/sql"
-	"log"
 	"time"
 
 	"github.com/pkg/errors"
@@ -33,7 +32,6 @@ type cockroachDB interface {
 // InitDatabase initializes the database
 func InitDatabase(db cockroachDB) (*CockroachModule, error) {
 	// Init DB: create patient table.
-	log.Print("Creating patient table (if needed)")
 	var _, err = db.Exec(createPatientTblStmt)
 	if err != nil {
 		return nil, err
