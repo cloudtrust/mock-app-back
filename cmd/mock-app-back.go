@@ -12,6 +12,7 @@ import (
 	"time"
 
 	sse "github.com/alexandrevicenzi/go-sse"
+	"github.com/cloudtrust/mock-app-back/pkg/hospitals"
 	"github.com/cloudtrust/mock-app-back/pkg/mockback"
 	"github.com/cloudtrust/mock-app-back/pkg/patients"
 	"github.com/go-kit/kit/endpoint"
@@ -100,6 +101,15 @@ func main() {
 			return
 		}
 	}
+	var hospitalDepartmentsDatabase *hospitals.CockroachModule
+	{
+		hospitalDepartmentsDatabase, err = hospitals.InitDatabase(hospitalConn)
+		if err != nil {
+			logger.Log("error", err)
+			return
+		}
+	}
+	_ = hospitalDepartmentsDatabase
 
 	// We create the modules.
 	var patientModule patients.Module

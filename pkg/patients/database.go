@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	createPatientTblStmt = `CREATE TABLE IF NOT EXISTS patients (
+	createPatientsTblStmt = `CREATE TABLE IF NOT EXISTS patients (
 		id INT,
 		first_name STRING,
 		last_name STRING,
@@ -18,11 +18,10 @@ const (
 	selectAllPatientsTblStmt = `SELECT * FROM patients`
 )
 
-// CockroachModule is the module that save health checks results in Cockroach DB.
+// CockroachModule deals with the communication with CockroachDB.
 type CockroachModule struct {
 	db cockroachDB
 }
-
 type cockroachDB interface {
 	Exec(query string, args ...interface{}) (sql.Result, error)
 	QueryRow(query string, args ...interface{}) *sql.Row
@@ -31,8 +30,8 @@ type cockroachDB interface {
 
 // InitDatabase initializes the database
 func InitDatabase(db cockroachDB) (*CockroachModule, error) {
-	// Init DB: create patient table.
-	var _, err = db.Exec(createPatientTblStmt)
+	// Init DB: create patients table.
+	var _, err = db.Exec(createPatientsTblStmt)
 	if err != nil {
 		return nil, err
 	}
