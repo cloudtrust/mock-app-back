@@ -64,27 +64,41 @@ func main() {
 		errc <- fmt.Errorf("%s", <-c)
 	}()
 
-	// We establish the cockroach connection.
 	type Cockroach interface {
 		Exec(query string, args ...interface{}) (sql.Result, error)
 		QueryRow(query string, args ...interface{}) *sql.Row
 		Query(query string, args ...interface{}) (*sql.Rows, error)
 	}
-	var cockroachConn Cockroach
+
 	var err error
-	logger.Log("msg", "Connecting to database...")
-	cockroachConn, err = sql.Open("postgres", fmt.Sprintf("postgresql://%s:%s@%s/%s?sslmode=disable", cockroachUsername, cockroachPassword, cockroachHostPort, cockroachHospitalDB))
+
+	// We establish the connetion to the hospital db.
+	var hospitalConn Cockroach
+	logger.Log("msg", "Connecting to hospital database...")
+	hospitalConn, err = sql.Open("postgres", fmt.Sprintf("postgresql://%s:%s@%s/%s?sslmode=disable", cockroachUsername, cockroachPassword, cockroachHostPort, cockroachHospitalDB))
 	if err != nil {
 		logger.Log("error", err)
 		return
 	} else {
-		logger.Log("msg", "Connected!")
+		logger.Log("msg", "Connected to hospital database!")
 	}
+
+	// We establish the connection to the medifiles db.
+	var medifilesConn Cockroach
+	logger.Log("msg", "Connecting to medifiles database...")
+	medifilesConn, err = sql.Open("postgres", fmt.Sprintf("postgresql://%s:%s@%s/%s?sslmode=disable", cockroachUsername, cockroachPassword, cockroachHostPort, cockroachMedifilesDB))
+	if err != nil {
+		logger.Log("error", err)
+		return
+	} else {
+		logger.Log("msg", "Connected to medifiles database!")
+	}
+	_ = medifilesConn
 
 	// We create the database modules.
 	var patientDatabase *patients.CockroachModule
 	{
-		patientDatabase, err = patients.InitDatabase(cockroachConn)
+		patientDatabase, err = patients.InitDatabase(hospitalConn)
 		if err != nil {
 			logger.Log("error", err)
 			return
