@@ -101,21 +101,25 @@ func main() {
 			return
 		}
 	}
-	var hospitalDepartmentsDatabase *hospitals.CockroachModule
+	var hospitalDatabase *hospitals.CockroachModule
 	{
-		hospitalDepartmentsDatabase, err = hospitals.InitDatabase(hospitalConn)
+		hospitalDatabase, err = hospitals.InitDatabase(hospitalConn)
 		if err != nil {
 			logger.Log("error", err)
 			return
 		}
 	}
-	_ = hospitalDepartmentsDatabase
 
 	// We create the modules.
 	var patientModule patients.Module
 	{
 		patientModule = patients.NewModule(*patientDatabase)
 	}
+	var hospitalModule hospitals.Module
+	{
+		hospitalModule = hospitals.NewModule(*hospitalDatabase)
+	}
+	_ = hospitalModule
 
 	// We create the business components
 	var patientComponent patients.Component
