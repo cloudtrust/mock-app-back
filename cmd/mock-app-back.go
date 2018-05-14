@@ -154,7 +154,7 @@ func main() {
 		errc <- http.ListenAndServe(sseAddr, h)
 	}()
 	go func() {
-		rand.Seed(42)
+		rand.Seed(time.Now().UTC().UnixNano())
 		for {
 			time.Sleep(time.Duration(5) * time.Second)
 			mockback.SendMessage(server, logger, sseEvents, 1, fmt.Sprintf("Ping %d!", rand.Intn(9999)))
