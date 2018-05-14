@@ -40,10 +40,11 @@ func main() {
 		sseAddr  = c.GetString("component-sse-host-port")
 
 		// Cockroach
-		cockroachHostPort   = c.GetString("cockroach-host-port")
-		cockroachUsername   = c.GetString("cockroach-username")
-		cockroachPassword   = c.GetString("cockroach-password")
-		cockroachPatientsDB = c.GetString("cockroach-patients-database")
+		cockroachHostPort    = c.GetString("cockroach-host-port")
+		cockroachUsername    = c.GetString("cockroach-username")
+		cockroachPassword    = c.GetString("cockroach-password")
+		cockroachHospitalDB  = c.GetString("cockroach-hospital-database")
+		cockroachMedifilesDB = c.GetString("cockroach-medifiles-database")
 
 		// HTTP
 		httpAllowedOrigin = c.GetString("http-allowed-origin")
@@ -52,6 +53,8 @@ func main() {
 		// SSE
 		sseEvents = c.GetString("sse-events")
 	)
+
+	_ = cockroachMedifilesDB
 
 	// Critical errors channel.
 	var errc = make(chan error)
@@ -70,7 +73,7 @@ func main() {
 	var cockroachConn Cockroach
 	var err error
 	logger.Log("msg", "Connecting to database...")
-	cockroachConn, err = sql.Open("postgres", fmt.Sprintf("postgresql://%s:%s@%s/%s?sslmode=disable", cockroachUsername, cockroachPassword, cockroachHostPort, cockroachPatientsDB))
+	cockroachConn, err = sql.Open("postgres", fmt.Sprintf("postgresql://%s:%s@%s/%s?sslmode=disable", cockroachUsername, cockroachPassword, cockroachHostPort, cockroachHospitalDB))
 	if err != nil {
 		logger.Log("error", err)
 		return
@@ -179,7 +182,8 @@ func config(logger log.Logger) *viper.Viper {
 	v.SetDefault("cockroach-host-port", "")
 	v.SetDefault("cockroach-username", "")
 	v.SetDefault("cockroach-password", "")
-	v.SetDefault("cockroach-patients-database", "")
+	v.SetDefault("cockroach-hospital-database", "")
+	v.SetDefault("cockroach-medifiles-database", "")
 
 	// HTTP.
 	v.SetDefault("http-allowed-origin", "http://localhost:4200")

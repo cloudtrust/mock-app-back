@@ -7,7 +7,8 @@ component-sse-host-port: 0.0.0.0:3000
 cockroach-host-port: localhost:26257
 cockroach-username: root
 cockroach-password: 
-cockroach-patients-database: mockappdb
+cockroach-hospital-database: mockappdb
+cockroach-medifiles-database: medifiles
 
 # HTTP config
 http-allowed-origin: http://localhost:4200

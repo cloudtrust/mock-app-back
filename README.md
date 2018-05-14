@@ -35,9 +35,11 @@ Cockroach can be monitored via [this page](http://localhost:8080/).
 cockroach sql --insecure
 ```
 ```
-CREATE DATABASE mockappdb;
+CREATE DATABASE hospital;
+CREATE DATABASE medifiles;
 CREATE USER mockappuser;
 GRANT ALL ON DATABASE mockappdb TO mockappuser;
+GRANT ALL ON DATABASE medifiles TO mockappuser;
 ```
 
 ###
