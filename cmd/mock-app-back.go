@@ -54,8 +54,6 @@ func main() {
 		sseEvents = c.GetString("sse-events")
 	)
 
-	_ = cockroachMedifilesDB
-
 	// Critical errors channel.
 	var errc = make(chan error)
 	go func() {
