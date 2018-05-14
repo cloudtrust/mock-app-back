@@ -79,9 +79,8 @@ func main() {
 	if err != nil {
 		logger.Log("error", err)
 		return
-	} else {
-		logger.Log("msg", "Connected to hospital database!")
 	}
+	logger.Log("msg", "Connected to hospital database!")
 
 	// We establish the connection to the medifiles db.
 	var medifilesConn Cockroach
@@ -90,9 +89,8 @@ func main() {
 	if err != nil {
 		logger.Log("error", err)
 		return
-	} else {
-		logger.Log("msg", "Connected to medifiles database!")
 	}
+	logger.Log("msg", "Connected to medifiles database!")
 	_ = medifilesConn
 
 	// We create the database modules.
