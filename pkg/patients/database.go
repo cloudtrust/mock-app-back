@@ -18,8 +18,8 @@ const (
 	selectAllPatientsTblStmt = `SELECT * FROM patients`
 )
 
-// CockroachModule deals with the communication with CockroachDB.
-type CockroachModule struct {
+// Database deals with the communication with CockroachDB.
+type Database struct {
 	db cockroachDB
 }
 type cockroachDB interface {
@@ -29,19 +29,19 @@ type cockroachDB interface {
 }
 
 // InitDatabase initializes the database
-func InitDatabase(db cockroachDB) (*CockroachModule, error) {
+func InitDatabase(db cockroachDB) (*Database, error) {
 	// Init DB: create patients table.
 	var _, err = db.Exec(createPatientsTblStmt)
 	if err != nil {
 		return nil, err
 	}
-	return &CockroachModule{
+	return &Database{
 		db: db,
 	}, nil
 }
 
 // ReadFromDb returns all the patients from the database
-func (c *CockroachModule) ReadFromDb() ([]Patient, error) {
+func (c *Database) ReadFromDb() ([]Patient, error) {
 	var patients = []Patient{}
 	var rows, err = c.db.Query(selectAllPatientsTblStmt)
 	if err != nil {

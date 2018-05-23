@@ -21,8 +21,8 @@ const (
 	selectAllDepartmentsTblStmt = `SELECT * FROM departments`
 )
 
-// CockroachModule deals with the communication with CockroachDB.
-type CockroachModule struct {
+// HospDepDatabase deals with the communication with CockroachDB.
+type HospDepDatabase struct {
 	db cockroachDB
 }
 type cockroachDB interface {
@@ -32,7 +32,7 @@ type cockroachDB interface {
 }
 
 // InitDatabase initializes the database
-func InitDatabase(db cockroachDB) (*CockroachModule, error) {
+func InitDatabase(db cockroachDB) (*HospDepDatabase, error) {
 	// Init DB: create hospitals table.
 	var _, err = db.Exec(createHospitalsTblStmt)
 	if err != nil {
@@ -45,13 +45,13 @@ func InitDatabase(db cockroachDB) (*CockroachModule, error) {
 		return nil, err
 	}
 
-	return &CockroachModule{
+	return &HospDepDatabase{
 		db: db,
 	}, nil
 }
 
 // ReadHospitalsFromDb returns all the hospitals from the database
-func (c *CockroachModule) ReadHospitalsFromDb() ([]Hospital, error) {
+func (c *HospDepDatabase) ReadHospitalsFromDb() ([]Hospital, error) {
 	var hospitals = []Hospital{}
 	var rows, err = c.db.Query(selectAllHospitalsTblStmt)
 	if err != nil {
@@ -82,7 +82,7 @@ func (c *CockroachModule) ReadHospitalsFromDb() ([]Hospital, error) {
 }
 
 // ReadDepartmentsFromDb returns all the departments from the database
-func (c *CockroachModule) ReadDepartmentsFromDb() ([]Department, error) {
+func (c *HospDepDatabase) ReadDepartmentsFromDb() ([]Department, error) {
 	var departments = []Department{}
 	var rows, err = c.db.Query(selectAllDepartmentsTblStmt)
 	if err != nil {

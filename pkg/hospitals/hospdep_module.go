@@ -18,27 +18,27 @@ type Department struct {
 	Doctors  []Doctor `json:"doctors"`
 }
 
-// Module contains the business logic for the hospitals/departments.
-type Module interface {
+// HospDepModule contains the business logic for the hospitals/departments.
+type HospDepModule interface {
 	ListAllHospitals(ctx context.Context) ([]Hospital, error)
 	ListAllDepartments(ctx context.Context) ([]Department, error)
 }
 
-type module struct {
-	cockroachModule CockroachModule
+type hospDepModule struct {
+	hospDepDatabase HospDepDatabase
 }
 
-func (c *module) ListAllHospitals(ctx context.Context) ([]Hospital, error) {
-	return c.cockroachModule.ReadHospitalsFromDb()
+func (c *hospDepModule) ListAllHospitals(ctx context.Context) ([]Hospital, error) {
+	return c.hospDepDatabase.ReadHospitalsFromDb()
 }
 
-func (c *module) ListAllDepartments(ctx context.Context) ([]Department, error) {
-	return c.cockroachModule.ReadDepartmentsFromDb()
+func (c *hospDepModule) ListAllDepartments(ctx context.Context) ([]Department, error) {
+	return c.hospDepDatabase.ReadDepartmentsFromDb()
 }
 
 // NewModule returns a hospital/departments module
-func NewModule(cockroachModule CockroachModule) Module {
-	return &module{
-		cockroachModule: cockroachModule,
+func NewModule(hospDepDatabase HospDepDatabase) HospDepModule {
+	return &hospDepModule{
+		hospDepDatabase: hospDepDatabase,
 	}
 }

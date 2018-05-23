@@ -93,7 +93,7 @@ func main() {
 	_ = medifilesConn
 
 	// We create the database modules.
-	var patientDatabase *patients.CockroachModule
+	var patientDatabase *patients.Database
 	{
 		patientDatabase, err = patients.InitDatabase(hospitalConn)
 		if err != nil {
@@ -101,9 +101,9 @@ func main() {
 			return
 		}
 	}
-	var hospitalDatabase *hospitals.CockroachModule
+	var hospDepDatabase *hospitals.HospDepDatabase
 	{
-		hospitalDatabase, err = hospitals.InitDatabase(hospitalConn)
+		hospDepDatabase, err = hospitals.InitDatabase(hospitalConn)
 		if err != nil {
 			logger.Log("error", err)
 			return
@@ -115,11 +115,11 @@ func main() {
 	{
 		patientModule = patients.NewModule(*patientDatabase)
 	}
-	var hospitalModule hospitals.Module
+	var hospDepModule hospitals.HospDepModule
 	{
-		hospitalModule = hospitals.NewModule(*hospitalDatabase)
+		hospDepModule = hospitals.NewModule(*hospDepDatabase)
 	}
-	_ = hospitalModule
+	_ = hospDepModule
 
 	// We create the business components
 	var patientComponent patients.Component

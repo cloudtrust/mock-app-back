@@ -21,16 +21,16 @@ type Module interface {
 }
 
 type module struct {
-	cockroachModule CockroachModule
+	database Database
 }
 
 func (c *module) ListAll(ctx context.Context) ([]Patient, error) {
-	return c.cockroachModule.ReadFromDb()
+	return c.database.ReadFromDb()
 }
 
 // NewModule returns a patient module
-func NewModule(cockroachModule CockroachModule) Module {
+func NewModule(database Database) Module {
 	return &module{
-		cockroachModule: cockroachModule,
+		database: database,
 	}
 }
