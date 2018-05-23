@@ -30,3 +30,15 @@ INSERT INTO hospital.departments(id, name, hospital_id) VALUES (0, 'Natalites', 
 INSERT INTO hospital.departments(id, name, hospital_id) VALUES (1, 'Radiologie', 0);
 INSERT INTO hospital.departments(id, name, hospital_id) VALUES (2, 'Oncologie', 1);
 INSERT INTO hospital.departments(id, name, hospital_id) VALUES (3, 'Dermatologie', 1);
+
+CREATE TABLE IF NOT EXISTS doctors (
+		id INT,
+		first_name STRING,
+		last_name STRING,
+		department_id INT,
+		PRIMARY KEY (id));
+DELETE FROM hospital.doctors WHERE true;
+INSERT INTO hospital.doctors(id, first_name, last_name, department_id) VALUES (0, 'Jane', 'Doe', 0);
+INSERT INTO hospital.doctors(id, first_name, last_name, department_id) VALUES (1, 'John', 'Doe', 1);
+INSERT INTO hospital.doctors(id, first_name, last_name, department_id) VALUES (2, 'Gregory', 'House', 2);
+INSERT INTO hospital.doctors(id, first_name, last_name, department_id) VALUES (3, 'James', 'Wilson', 3);

@@ -31,8 +31,8 @@ type cockroachDB interface {
 	Query(query string, args ...interface{}) (*sql.Rows, error)
 }
 
-// InitDatabase initializes the database
-func InitDatabase(db cockroachDB) (*HospDepDatabase, error) {
+// InitHospDepDatabase initializes the database
+func InitHospDepDatabase(db cockroachDB) (*HospDepDatabase, error) {
 	// Init DB: create hospitals table.
 	var _, err = db.Exec(createHospitalsTblStmt)
 	if err != nil {

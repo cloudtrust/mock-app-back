@@ -103,12 +103,21 @@ func main() {
 	}
 	var hospDepDatabase *hospitals.HospDepDatabase
 	{
-		hospDepDatabase, err = hospitals.InitDatabase(hospitalConn)
+		hospDepDatabase, err = hospitals.InitHospDepDatabase(hospitalConn)
 		if err != nil {
 			logger.Log("error", err)
 			return
 		}
 	}
+	var doctorsDatabase *hospitals.DoctorsDatabase
+	{
+		doctorsDatabase, err = hospitals.InitDoctorsDatabase(hospitalConn)
+		if err != nil {
+			logger.Log("error", err)
+			return
+		}
+	}
+	_ = doctorsDatabase
 
 	// We create the modules.
 	var patientModule patients.Module
