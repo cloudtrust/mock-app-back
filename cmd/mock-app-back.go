@@ -15,6 +15,7 @@ import (
 	"github.com/cloudtrust/mock-app-back/pkg/hospitals"
 	"github.com/cloudtrust/mock-app-back/pkg/mockback"
 	"github.com/cloudtrust/mock-app-back/pkg/patients"
+	"github.com/cloudtrust/mock-app-back/pkg/shared"
 	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/kit/log"
 	"github.com/gorilla/mux"
@@ -50,6 +51,9 @@ func main() {
 		// HTTP
 		httpAllowedOrigin = c.GetString("http-allowed-origin")
 		httpPatients      = c.GetString("http-patients")
+		httpHospitals     = c.GetString("http-hospitals")
+		httpDepartments   = c.GetString("http-departments")
+		httpDoctors       = c.GetString("http-doctors")
 
 		// SSE
 		sseEvents = c.GetString("sse-events")
@@ -141,12 +145,23 @@ func main() {
 	{
 		hospitalComponent = hospitals.NewComponent(hospDepModule, doctorsModule)
 	}
-	_ = hospitalComponent
 
 	// We create the endpoints
 	var listAllPatientsEndpoint endpoint.Endpoint
 	{
 		listAllPatientsEndpoint = patients.MakeListAllPatientsEndpoint(patientComponent)
+	}
+	var listAllHospitalsEndpoint endpoint.Endpoint
+	{
+		listAllHospitalsEndpoint = hospitals.MakeListAllHospitalsEndpoint(hospitalComponent)
+	}
+	var listAllDepartmentsEndpoint endpoint.Endpoint
+	{
+		listAllDepartmentsEndpoint = hospitals.MakeListAllDepartmentsEndpoint(hospitalComponent)
+	}
+	var listAllDoctorsEndpoint endpoint.Endpoint
+	{
+		listAllDoctorsEndpoint = hospitals.MakeListAllDoctorsEndpoint(hospitalComponent)
 	}
 
 	// We create the HTTP server
@@ -155,11 +170,10 @@ func main() {
 		var r = mux.NewRouter()
 
 		// We handle the endpoints
-		var listAllPatientsHandler http.Handler
-		{
-			listAllPatientsHandler = patients.MakeListAllPatientsHandler(listAllPatientsEndpoint)
-		}
-		r.Handle(httpPatients, listAllPatientsHandler)
+		r.Handle(httpPatients, shared.MakeHandlerForEndpoint(listAllPatientsEndpoint))
+		r.Handle(httpHospitals, shared.MakeHandlerForEndpoint(listAllHospitalsEndpoint))
+		r.Handle(httpDepartments, shared.MakeHandlerForEndpoint(listAllDepartmentsEndpoint))
+		r.Handle(httpDoctors, shared.MakeHandlerForEndpoint(listAllDoctorsEndpoint))
 
 		// We let the front-end access the back-end
 		var c = cors.New(cors.Options{
@@ -228,6 +242,9 @@ func config(logger log.Logger) *viper.Viper {
 	// HTTP.
 	v.SetDefault("http-allowed-origin", "http://localhost:4200")
 	v.SetDefault("http-patients", "/patients")
+	v.SetDefault("http-hospitals", "/hospitals")
+	v.SetDefault("http-departments", "/departments")
+	v.SetDefault("http-doctors", "/doctors")
 
 	// SSE.
 	v.SetDefault("sse-events", "/events")

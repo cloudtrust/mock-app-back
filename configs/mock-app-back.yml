@@ -13,6 +13,9 @@ cockroach-medifiles-database: medifiles
 # HTTP config
 http-allowed-origin: http://localhost:4200
 http-patients: /patients
+http-hospitals: /hospitals
+http-departments: /departments
+http-doctors: /doctors
 
 ## SSE config
 sse-events: /events
