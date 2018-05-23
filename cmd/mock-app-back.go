@@ -117,7 +117,6 @@ func main() {
 			return
 		}
 	}
-	_ = doctorsDatabase
 
 	// We create the modules.
 	var patientModule patients.Module
@@ -126,9 +125,14 @@ func main() {
 	}
 	var hospDepModule hospitals.HospDepModule
 	{
-		hospDepModule = hospitals.NewModule(*hospDepDatabase)
+		hospDepModule = hospitals.NewHospDepModule(*hospDepDatabase)
+	}
+	var doctorsModule hospitals.DoctorsModule
+	{
+		doctorsModule = hospitals.NewDoctorModule(*doctorsDatabase)
 	}
 	_ = hospDepModule
+	_ = doctorsModule
 
 	// We create the business components
 	var patientComponent patients.Component

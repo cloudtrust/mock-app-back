@@ -36,8 +36,8 @@ func (c *hospDepModule) ListAllDepartments(ctx context.Context) ([]Department, e
 	return c.hospDepDatabase.ReadDepartmentsFromDb()
 }
 
-// NewModule returns a hospital/departments module
-func NewModule(hospDepDatabase HospDepDatabase) HospDepModule {
+// NewHospDepModule returns a hospital/departments module
+func NewHospDepModule(hospDepDatabase HospDepDatabase) HospDepModule {
 	return &hospDepModule{
 		hospDepDatabase: hospDepDatabase,
 	}
