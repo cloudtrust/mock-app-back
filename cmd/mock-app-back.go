@@ -131,14 +131,17 @@ func main() {
 	{
 		doctorsModule = hospitals.NewDoctorModule(*doctorsDatabase)
 	}
-	_ = hospDepModule
-	_ = doctorsModule
 
 	// We create the business components
 	var patientComponent patients.Component
 	{
 		patientComponent = patients.NewComponent(patientModule)
 	}
+	var hospitalComponent hospitals.Component
+	{
+		hospitalComponent = hospitals.NewComponent(hospDepModule, doctorsModule)
+	}
+	_ = hospitalComponent
 
 	// We create the endpoints
 	var listAllPatientsEndpoint endpoint.Endpoint
