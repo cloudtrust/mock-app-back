@@ -12,7 +12,7 @@ type Patient struct {
 	LastName   string    `json:"lastName"`
 	BirthDate  time.Time `json:"birthDate"`
 	AVSNumber  string    `json:"avsNumber"`
-	DoctorsIds []int32   `json:"-"`
+	DoctorsIds []int32   `json:"doctors"`
 }
 
 // Module contains the business logic for the patients.

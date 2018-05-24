@@ -14,7 +14,7 @@ type Hospital struct {
 type Department struct {
 	ID       int32    `json:"id"`
 	Name     string   `json:"name"`
-	Hospital Hospital `json:"-"`
+	Hospital Hospital `json:"hospital"`
 	Doctors  []Doctor `json:"doctors"`
 }
 

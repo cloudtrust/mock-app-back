@@ -7,7 +7,7 @@ type Doctor struct {
 	ID          int32        `json:"id"`
 	FirstName   string       `json:"firstName"`
 	LastName    string       `json:"lastName"`
-	Departments []Department `json:"-"`
+	Departments []Department `json:"departments"`
 	PatientsIds []int32      `json:"patients"`
 }
 
