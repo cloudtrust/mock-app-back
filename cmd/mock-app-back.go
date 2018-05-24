@@ -12,6 +12,7 @@ import (
 	"time"
 
 	sse "github.com/alexandrevicenzi/go-sse"
+	"github.com/cloudtrust/mock-app-back/pkg/files"
 	"github.com/cloudtrust/mock-app-back/pkg/hospitals"
 	"github.com/cloudtrust/mock-app-back/pkg/patients"
 	"github.com/cloudtrust/mock-app-back/pkg/shared"
@@ -120,6 +121,15 @@ func main() {
 			return
 		}
 	}
+	var filesDatabase *files.Database
+	{
+		filesDatabase, err = files.InitDatabase(medifilesConn)
+		if err != nil {
+			logger.Log("error", err)
+			return
+		}
+	}
+	_ = filesDatabase
 
 	// We create the modules.
 	var patientModule patients.Module
