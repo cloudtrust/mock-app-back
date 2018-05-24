@@ -1,4 +1,4 @@
-package mockback
+package shared
 
 import (
 	"fmt"

@@ -13,7 +13,6 @@ import (
 
 	sse "github.com/alexandrevicenzi/go-sse"
 	"github.com/cloudtrust/mock-app-back/pkg/hospitals"
-	"github.com/cloudtrust/mock-app-back/pkg/mockback"
 	"github.com/cloudtrust/mock-app-back/pkg/patients"
 	"github.com/cloudtrust/mock-app-back/pkg/shared"
 	"github.com/go-kit/kit/endpoint"
@@ -214,7 +213,7 @@ func main() {
 		rand.Seed(time.Now().UTC().UnixNano())
 		for {
 			time.Sleep(time.Duration(5) * time.Second)
-			mockback.SendMessage(server, logger, sseEvents, 1, fmt.Sprintf("Ping %d!", rand.Intn(9999)))
+			shared.SendMessage(server, logger, sseEvents, 1, fmt.Sprintf("Ping %d!", rand.Intn(9999)))
 		}
 	}()
 
