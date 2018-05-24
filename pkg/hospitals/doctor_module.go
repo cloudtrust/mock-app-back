@@ -4,11 +4,11 @@ import "context"
 
 // Doctor represents a doctor
 type Doctor struct {
-	ID          int32        `json:"id"`
-	FirstName   string       `json:"firstName"`
-	LastName    string       `json:"lastName"`
-	Departments []Department `json:"departments"`
-	PatientsIds []int32      `json:"patients"`
+	ID          int32        `json:"id,omitempty"`
+	FirstName   string       `json:"firstName,omitempty"`
+	LastName    string       `json:"lastName,omitempty"`
+	Departments []Department `json:"departments,omitempty"`
+	PatientsIds []int32      `json:"patients,omitempty"`
 }
 
 // DoctorsModule contains the business logic for the doctors.

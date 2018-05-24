@@ -4,18 +4,18 @@ import "context"
 
 // Hospital represents a hospital
 type Hospital struct {
-	ID          int32        `json:"id"`
-	Name        string       `json:"name"`
-	City        string       `json:"city"`
-	Departments []Department `json:"departments"`
+	ID          int32        `json:"id,omitempty"`
+	Name        string       `json:"name,omitempty"`
+	City        string       `json:"city,omitempty"`
+	Departments []Department `json:"departments,omitempty"`
 }
 
 // Department represents the department of a hospital
 type Department struct {
-	ID       int32    `json:"id"`
-	Name     string   `json:"name"`
-	Hospital Hospital `json:"hospital"`
-	Doctors  []Doctor `json:"doctors"`
+	ID       int32    `json:"id,omitempty"`
+	Name     string   `json:"name,omitempty"`
+	Hospital Hospital `json:"hospital,omitempty"`
+	Doctors  []Doctor `json:"doctors,omitempty"`
 }
 
 // HospDepModule contains the business logic for the hospitals/departments.

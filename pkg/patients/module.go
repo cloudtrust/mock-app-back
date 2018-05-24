@@ -7,12 +7,12 @@ import (
 
 // Patient represents a patient
 type Patient struct {
-	ID         int32     `json:"id"`
-	FirstName  string    `json:"firstName"`
-	LastName   string    `json:"lastName"`
-	BirthDate  time.Time `json:"birthDate"`
-	AVSNumber  string    `json:"avsNumber"`
-	DoctorsIds []int32   `json:"doctors"`
+	ID         int32     `json:"id,omitempty"`
+	FirstName  string    `json:"firstName,omitempty"`
+	LastName   string    `json:"lastName,omitempty"`
+	BirthDate  time.Time `json:"birthDate,omitempty"`
+	AVSNumber  string    `json:"avsNumber,omitempty"`
+	DoctorsIds []int32   `json:"doctors,omitempty"`
 }
 
 // Module contains the business logic for the patients.
