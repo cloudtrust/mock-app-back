@@ -54,6 +54,7 @@ func main() {
 		httpHospitals     = c.GetString("http-hospitals")
 		httpDepartments   = c.GetString("http-departments")
 		httpDoctors       = c.GetString("http-doctors")
+		httpFiles         = c.GetString("http-files")
 
 		// SSE
 		sseEvents = c.GetString("sse-events")
@@ -183,7 +184,6 @@ func main() {
 	{
 		listAllFilesEndpoint = files.MakeListAllEndpoint(filesComponent)
 	}
-	_ = listAllFilesEndpoint
 
 	// We create the HTTP server
 	go func() {
@@ -195,6 +195,7 @@ func main() {
 		r.Handle(httpHospitals, shared.MakeHandlerForEndpoint(listAllHospitalsEndpoint))
 		r.Handle(httpDepartments, shared.MakeHandlerForEndpoint(listAllDepartmentsEndpoint))
 		r.Handle(httpDoctors, shared.MakeHandlerForEndpoint(listAllDoctorsEndpoint))
+		r.Handle(httpFiles, shared.MakeHandlerForEndpoint(listAllFilesEndpoint))
 
 		// We let the front-end access the back-end
 		var c = cors.New(cors.Options{
@@ -266,6 +267,7 @@ func config(logger log.Logger) *viper.Viper {
 	v.SetDefault("http-hospitals", "/hospitals")
 	v.SetDefault("http-departments", "/departments")
 	v.SetDefault("http-doctors", "/doctors")
+	v.SetDefault("http-files", "/files")
 
 	// SSE.
 	v.SetDefault("sse-events", "/events")

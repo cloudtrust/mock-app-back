@@ -16,6 +16,7 @@ http-patients: /patients
 http-hospitals: /hospitals
 http-departments: /departments
 http-doctors: /doctors
+http-files: /files
 
 ## SSE config
 sse-events: /events
