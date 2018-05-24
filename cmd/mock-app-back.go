@@ -129,7 +129,6 @@ func main() {
 			return
 		}
 	}
-	_ = filesDatabase
 
 	// We create the modules.
 	var patientModule patients.Module
@@ -144,6 +143,11 @@ func main() {
 	{
 		doctorsModule = hospitals.NewDoctorModule(*doctorsDatabase)
 	}
+	var filesModule files.Module
+	{
+		filesModule = files.NewModule(*filesDatabase)
+	}
+	_ = filesModule
 
 	// We create the business components
 	var patientComponent patients.Component
