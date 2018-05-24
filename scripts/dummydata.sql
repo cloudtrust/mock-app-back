@@ -42,3 +42,14 @@ INSERT INTO hospital.doctors(id, first_name, last_name, department_id) VALUES (1
 INSERT INTO hospital.doctors(id, first_name, last_name, department_id) VALUES (2, 'John', 'Doe', 2);
 INSERT INTO hospital.doctors(id, first_name, last_name, department_id) VALUES (3, 'Gregory', 'House', 3);
 INSERT INTO hospital.doctors(id, first_name, last_name, department_id) VALUES (4, 'James', 'Wilson', 4);
+
+CREATE TABLE IF NOT EXISTS medifiles.files (
+		id INT,
+		patient_avs_number STRING,
+		doctor_id INT,
+		data STRING,
+		PRIMARY KEY (id));
+DELETE FROM medifiles.files WHERE true;
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (1, '420.1337.1337.42', 3, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (2, '420.1337.1337.42', 4, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (3, '765.4321.0303.44', 3, 'This is the content of the medical file.');
