@@ -131,9 +131,9 @@ func main() {
 	}
 
 	// We create the modules.
-	var patientModule patients.Module
+	var patientsModule patients.Module
 	{
-		patientModule = patients.NewModule(*patientDatabase)
+		patientsModule = patients.NewModule(*patientDatabase)
 	}
 	var hospDepModule hospitals.HospDepModule
 	{
@@ -147,34 +147,38 @@ func main() {
 	{
 		filesModule = files.NewModule(*filesDatabase)
 	}
-	_ = filesModule
 
 	// We create the business components
-	var patientComponent patients.Component
+	var patientsComponent patients.Component
 	{
-		patientComponent = patients.NewComponent(patientModule)
+		patientsComponent = patients.NewComponent(patientsModule)
 	}
-	var hospitalComponent hospitals.Component
+	var hospitalsComponent hospitals.Component
 	{
-		hospitalComponent = hospitals.NewComponent(hospDepModule, doctorsModule)
+		hospitalsComponent = hospitals.NewComponent(hospDepModule, doctorsModule)
 	}
+	var filesComponent files.Component
+	{
+		filesComponent = files.NewComponent(filesModule)
+	}
+	_ = filesComponent
 
 	// We create the endpoints
 	var listAllPatientsEndpoint endpoint.Endpoint
 	{
-		listAllPatientsEndpoint = patients.MakeListAllPatientsEndpoint(patientComponent)
+		listAllPatientsEndpoint = patients.MakeListAllPatientsEndpoint(patientsComponent)
 	}
 	var listAllHospitalsEndpoint endpoint.Endpoint
 	{
-		listAllHospitalsEndpoint = hospitals.MakeListAllHospitalsEndpoint(hospitalComponent)
+		listAllHospitalsEndpoint = hospitals.MakeListAllHospitalsEndpoint(hospitalsComponent)
 	}
 	var listAllDepartmentsEndpoint endpoint.Endpoint
 	{
-		listAllDepartmentsEndpoint = hospitals.MakeListAllDepartmentsEndpoint(hospitalComponent)
+		listAllDepartmentsEndpoint = hospitals.MakeListAllDepartmentsEndpoint(hospitalsComponent)
 	}
 	var listAllDoctorsEndpoint endpoint.Endpoint
 	{
-		listAllDoctorsEndpoint = hospitals.MakeListAllDoctorsEndpoint(hospitalComponent)
+		listAllDoctorsEndpoint = hospitals.MakeListAllDoctorsEndpoint(hospitalsComponent)
 	}
 
 	// We create the HTTP server
