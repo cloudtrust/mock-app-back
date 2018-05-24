@@ -31,7 +31,7 @@ INSERT INTO hospital.departments(id, name, hospital_id) VALUES (2, 'Radiologie',
 INSERT INTO hospital.departments(id, name, hospital_id) VALUES (3, 'Oncologie', 2);
 INSERT INTO hospital.departments(id, name, hospital_id) VALUES (4, 'Dermatologie', 2);
 
-CREATE TABLE IF NOT EXISTS doctors (
+CREATE TABLE IF NOT EXISTS hospital.doctors (
 		id INT,
 		first_name STRING,
 		last_name STRING,
