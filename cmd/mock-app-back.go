@@ -161,12 +161,11 @@ func main() {
 	{
 		filesComponent = files.NewComponent(filesModule)
 	}
-	_ = filesComponent
 
 	// We create the endpoints
 	var listAllPatientsEndpoint endpoint.Endpoint
 	{
-		listAllPatientsEndpoint = patients.MakeListAllPatientsEndpoint(patientsComponent)
+		listAllPatientsEndpoint = patients.MakeListAllEndpoint(patientsComponent)
 	}
 	var listAllHospitalsEndpoint endpoint.Endpoint
 	{
@@ -180,6 +179,11 @@ func main() {
 	{
 		listAllDoctorsEndpoint = hospitals.MakeListAllDoctorsEndpoint(hospitalsComponent)
 	}
+	var listAllFilesEndpoint endpoint.Endpoint
+	{
+		listAllFilesEndpoint = files.MakeListAllEndpoint(filesComponent)
+	}
+	_ = listAllFilesEndpoint
 
 	// We create the HTTP server
 	go func() {
