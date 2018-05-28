@@ -5,13 +5,21 @@ Mock App Back-end [![Build Status][ci-img]][ci] [![Coverage Status][cov-img]][co
 Go installer can be found [here](https://golang.org/doc/install).
 The following packages are needed:
 ```
-go get github.com/modocache/gover
-go get github.com/mattn/goveralls
-go get golang.org/x/tools/cmd/cover
-go get github.com/golang/dep/cmd/dep
 go get github.com/alexandrevicenzi/go-sse
+go get github.com/golang/dep/cmd/dep
+go get github.com/go-kit/kit/log
+go get github.com/go-kit/kit/transport/http
+go get github.com/go-kit/kit/endpoint
 go get github.com/gorilla/mux
+go get github.com/lib/pq
+go get github.com/mattn/goveralls
+go get github.com/modocache/gover
+go get github.com/pkg/errors
 go get github.com/rs/cors
+go get github.com/spf13/pflag
+go get github.com/spf13/viper
+go get github.com/stretchr/testify/assert
+go get golang.org/x/tools/cmd/cover
 ```
 Checkout the code in $GOPATH/src/github.com/cloudtrust/mock-app-back/
 
