@@ -20,13 +20,13 @@ func MakeHandlerForEndpoint(e endpoint.Endpoint) *http_transport.Server {
 	)
 }
 
-// decodeHTTPRequest decodes the flatbuffer flaki request.
+// decodeHTTPRequest decodes the request
 func decodeHTTPRequest(_ context.Context, req *http.Request) (interface{}, error) {
 	return req.Body, nil
 }
 
-// encodeHTTPReply encodes the flatbuffer flaki reply.
-func encodeHTTPReply(_ context.Context, w http.ResponseWriter, rep interface{}) error {
+// encodeHTTPReply encodes the reply
+func encodeHTTPReply(c context.Context, w http.ResponseWriter, rep interface{}) error {
 	var b bytes.Buffer
 	var enc = json.NewEncoder(&b)
 	enc.SetIndent("", "  ")
@@ -38,7 +38,7 @@ func encodeHTTPReply(_ context.Context, w http.ResponseWriter, rep interface{}) 
 	return nil
 }
 
-// httpErrorHandler encodes the flatbuffer flaki reply when there is an error.
+// httpErrorHandler encodes the reply when there is an error.
 func httpErrorHandler(ctx context.Context, err error, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/octet-stream")
 	w.WriteHeader(http.StatusInternalServerError)

@@ -68,6 +68,29 @@ func main() {
 		errc <- fmt.Errorf("%s", <-c)
 	}()
 
+	// We create the SSE Enpoint
+	var server *sse.Server
+	go func() {
+		logger.Log("msg", "Starting SSE Endpoint...")
+
+		// Create the server.
+		server = sse.NewServer(nil)
+		defer server.Shutdown()
+
+		// Register with /events endpoint.
+		http.Handle(sseEvents, server)
+
+		// We allow the front-end to access the endpoint
+		var c = cors.New(cors.Options{
+			AllowedOrigins:   []string{httpAllowedOrigin},
+			AllowCredentials: true,
+			Debug:            true,
+		})
+		var h = c.Handler(server)
+
+		errc <- http.ListenAndServe(sseAddr, h)
+	}()
+
 	type Cockroach interface {
 		Exec(query string, args ...interface{}) (sql.Result, error)
 		QueryRow(query string, args ...interface{}) *sql.Row
@@ -208,30 +231,7 @@ func main() {
 		errc <- http.ListenAndServe(httpAddr, h)
 	}()
 
-	var server *sse.Server
-
-	// We create the SSE Enpoint (WIP)
-	// Note : No need to review this : This is just a PoC that will be turned into something useful eventually.
-	go func() {
-		logger.Log("msg", "Starting SSE Endpoint...")
-
-		// Create the server.
-		server = sse.NewServer(nil)
-		defer server.Shutdown()
-
-		// Register with /events endpoint.
-		http.Handle(sseEvents, server)
-
-		// We allow the front-end to access the endpoint
-		var c = cors.New(cors.Options{
-			AllowedOrigins:   []string{httpAllowedOrigin},
-			AllowCredentials: true,
-			Debug:            true,
-		})
-		var h = c.Handler(server)
-
-		errc <- http.ListenAndServe(sseAddr, h)
-	}()
+	// Sends random messages in SSE channel 1. To be removed later on.
 	go func() {
 		rand.Seed(time.Now().UTC().UnixNano())
 		for {
