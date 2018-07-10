@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS hospital.hospitals (
 DELETE FROM hospital.hospitals WHERE true;
 INSERT INTO hospital.hospitals(id, name, city) VALUES (1, 'CHUV', 'Lausanne');
 INSERT INTO hospital.hospitals(id, name, city) VALUES (2, 'Le Samaritain', 'Vevey');
+INSERT INTO hospital.hospitals(id, name, city) VALUES (3, 'Clinique La Source', 'Lausanne');
 		
 CREATE TABLE IF NOT EXISTS hospital.departments (
 		id INT,
@@ -53,3 +54,30 @@ DELETE FROM medifiles.files WHERE true;
 INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (1, '420.1337.1337.42', 3, 'This is the content of the medical file.');
 INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (2, '420.1337.1337.42', 4, 'This is the content of the medical file.');
 INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (3, '765.4321.0303.44', 3, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (4, '420.1337.1337.42', 3, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (5, '420.1337.1337.42', 4, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (6, '765.4321.0303.44', 3, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (7, '420.1337.1337.42', 3, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (8, '420.1337.1337.42', 4, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (9, '765.4321.0303.44', 3, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (10, '420.1337.1337.42', 3, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (11, '420.1337.1337.42', 4, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (12, '765.4321.0303.44', 3, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (13, '420.1337.1337.42', 3, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (14, '420.1337.1337.42', 4, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (15, '765.4321.0303.44', 3, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (16, '420.1337.1337.42', 3, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (17, '420.1337.1337.42', 4, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (18, '765.4321.0303.44', 3, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (19, '420.1337.1337.42', 3, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (20, '420.1337.1337.42', 4, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (21, '765.4321.0303.44', 3, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (22, '420.1337.1337.42', 3, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (23, '420.1337.1337.42', 4, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (24, '765.4321.0303.44', 3, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (25, '765.4321.0303.44', 3, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (26, '420.1337.1337.42', 3, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (27, '420.1337.1337.42', 4, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (28, '765.4321.0303.44', 3, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (29, '420.1337.1337.42', 3, 'This is the content of the medical file.');
+INSERT INTO medifiles.files(id, patient_avs_number, doctor_id, data) VALUES (30, '420.1337.1337.42', 4, 'This is the content of the medical file.');
