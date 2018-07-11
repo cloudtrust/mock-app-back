@@ -14,6 +14,7 @@ type File struct {
 type Module interface {
 	ListAll(ctx context.Context) ([]File, error)
 	ListSome(ctx context.Context, first int32, rows int32) ([]File, error)
+	Count(ctx context.Context) (int32, error)
 }
 
 type module struct {
@@ -26,6 +27,10 @@ func (c *module) ListAll(ctx context.Context) ([]File, error) {
 
 func (c *module) ListSome(ctx context.Context, first int32, rows int32) ([]File, error) {
 	return c.database.ReadFromDb(first, rows)
+}
+
+func (c *module) Count(ctx context.Context) (int32, error) {
+	return c.database.Count()
 }
 
 // NewModule returns a files module

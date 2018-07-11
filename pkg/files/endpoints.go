@@ -36,11 +36,17 @@ func MakeListSomeEndpoint(component Component) endpoint.Endpoint {
 					return nil, errb
 				}
 				// We return a query of some files
-				var data, err = component.ListSome(ctx, int32(first), int32(rows))
+				var data, errList = component.ListSome(ctx, int32(first), int32(rows))
+				var count, errCount = component.Count(ctx)
 				var page Page
 				page.Data = data
-				page.Count = 30
-				return page, err
+				page.Count = count
+				if errList != nil {
+					return page, errList
+				} else if errCount != nil {
+					return page, errCount
+				}
+				return page, nil
 			}
 		}
 		// We return a query of all files

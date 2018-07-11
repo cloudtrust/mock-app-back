@@ -8,6 +8,7 @@ import (
 type Component interface {
 	ListAll(context.Context) ([]File, error)
 	ListSome(context.Context, int32, int32) ([]File, error)
+	Count(context.Context) (int32, error)
 }
 
 // component is the files business component.
@@ -21,6 +22,10 @@ func (c *component) ListAll(ctx context.Context) ([]File, error) {
 
 func (c *component) ListSome(ctx context.Context, first int32, rows int32) ([]File, error) {
 	return c.module.ListSome(ctx, first, rows)
+}
+
+func (c *component) Count(ctx context.Context) (int32, error) {
+	return c.module.Count(ctx)
 }
 
 // NewComponent returns a files business component
