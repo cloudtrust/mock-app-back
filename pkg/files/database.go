@@ -13,7 +13,8 @@ const (
 		doctor_id INT,
 		data STRING,
 		PRIMARY KEY (id))`
-	selectAllFilesTblStmt = `SELECT * FROM files`
+	selectAllFilesTblStmt  = `SELECT * FROM files`
+	selectSomeFilesTblStmt = `SELECT * FROM files OFFSET $1 LIMIT $2`
 )
 
 // Database deals with the communication with CockroachDB.
@@ -39,9 +40,15 @@ func InitDatabase(db cockroachDB) (*Database, error) {
 }
 
 // ReadFromDb returns all the files from the database
-func (c *Database) ReadFromDb() ([]File, error) {
+func (c *Database) ReadFromDb(first int32, count int32) ([]File, error) {
 	var files = []File{}
-	var rows, err = c.db.Query(selectAllFilesTblStmt)
+	var rows *sql.Rows
+	var err error
+	if first != -1 && count != -1 {
+		rows, err = c.db.Query(selectSomeFilesTblStmt, first, count)
+	} else {
+		rows, err = c.db.Query(selectAllFilesTblStmt)
+	}
 	if err != nil {
 		return nil, errors.Wrapf(err, "error while returning all the files from the database.")
 	}

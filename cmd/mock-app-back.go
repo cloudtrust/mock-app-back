@@ -203,9 +203,9 @@ func main() {
 	{
 		listAllDoctorsEndpoint = hospitals.MakeListAllDoctorsEndpoint(hospitalsComponent)
 	}
-	var listAllFilesEndpoint endpoint.Endpoint
+	var listSomeFilesEndpoint endpoint.Endpoint
 	{
-		listAllFilesEndpoint = files.MakeListAllEndpoint(filesComponent)
+		listSomeFilesEndpoint = files.MakeListSomeEndpoint(filesComponent)
 	}
 
 	// We create the HTTP server
@@ -218,7 +218,7 @@ func main() {
 		r.Handle(httpHospitals, shared.MakeHandlerForEndpoint(listAllHospitalsEndpoint))
 		r.Handle(httpDepartments, shared.MakeHandlerForEndpoint(listAllDepartmentsEndpoint))
 		r.Handle(httpDoctors, shared.MakeHandlerForEndpoint(listAllDoctorsEndpoint))
-		r.Handle(httpFiles, shared.MakeHandlerForEndpoint(listAllFilesEndpoint))
+		r.Handle(httpFiles, shared.MakeHandlerForEndpoint(listSomeFilesEndpoint))
 
 		// We let the front-end access the back-end
 		var c = cors.New(cors.Options{

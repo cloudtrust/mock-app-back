@@ -22,7 +22,7 @@ func MakeHandlerForEndpoint(e endpoint.Endpoint) *http_transport.Server {
 
 // decodeHTTPRequest decodes the request
 func decodeHTTPRequest(_ context.Context, req *http.Request) (interface{}, error) {
-	return req.Body, nil
+	return req, nil
 }
 
 // encodeHTTPReply encodes the reply

@@ -13,6 +13,7 @@ type File struct {
 // Module contains the business logic for the files.
 type Module interface {
 	ListAll(ctx context.Context) ([]File, error)
+	ListSome(ctx context.Context, first int32, rows int32) ([]File, error)
 }
 
 type module struct {
@@ -20,7 +21,11 @@ type module struct {
 }
 
 func (c *module) ListAll(ctx context.Context) ([]File, error) {
-	return c.database.ReadFromDb()
+	return c.database.ReadFromDb(-1, -1)
+}
+
+func (c *module) ListSome(ctx context.Context, first int32, rows int32) ([]File, error) {
+	return c.database.ReadFromDb(first, rows)
 }
 
 // NewModule returns a files module
