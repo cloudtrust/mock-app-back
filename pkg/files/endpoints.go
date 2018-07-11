@@ -13,6 +13,12 @@ type Endpoints struct {
 	ListSomeEndpoint endpoint.Endpoint
 }
 
+// Page contains a page of File[] with the total count
+type Page struct {
+	Count int32  `json:"count"`
+	Data  []File `json:"data"`
+}
+
 // MakeListSomeEndpoint makes the ListSomeEndpoint.
 func MakeListSomeEndpoint(component Component) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
@@ -30,7 +36,11 @@ func MakeListSomeEndpoint(component Component) endpoint.Endpoint {
 					return nil, errb
 				}
 				// We return a query of some files
-				return component.ListSome(ctx, int32(first), int32(rows))
+				var data, err = component.ListSome(ctx, int32(first), int32(rows))
+				var page Page
+				page.Data = data
+				page.Count = 30
+				return page, err
 			}
 		}
 		// We return a query of all files
