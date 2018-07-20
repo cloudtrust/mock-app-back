@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 
 	"github.com/go-kit/kit/endpoint"
 	http_transport "github.com/go-kit/kit/transport/http"
@@ -18,6 +19,17 @@ func MakeHandlerForEndpoint(e endpoint.Endpoint) *http_transport.Server {
 		encodeHTTPReply,
 		http_transport.ServerErrorEncoder(httpErrorHandler),
 	)
+}
+
+// HasParameters returns if a query contains a list of parameters
+func HasParameters(allParameters url.Values, parameters []string) bool {
+	for _, value := range parameters {
+		_, found := allParameters[value]
+		if !found {
+			return false
+		}
+	}
+	return true
 }
 
 // decodeHTTPRequest decodes the request
