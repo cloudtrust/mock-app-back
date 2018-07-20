@@ -80,19 +80,9 @@ func (c *Database) ReadFromDb(first int32, count int32) ([]File, error) {
 
 // Count count all the rows from the database
 func (c *Database) Count() (int32, error) {
-	var rows, err = c.db.Query(countFilesTblStmt)
-	if err != nil {
-		return 0, errors.Wrapf(err, "error while counting the files from the database.")
-	}
+	var rows = c.db.QueryRow(countFilesTblStmt)
 	var count int32
-	defer rows.Close()
-	for rows.Next() {
-		var err = rows.Scan(&count)
-		if err != nil {
-			return 0, errors.Wrapf(err, "error while counting the files from the database.")
-		}
-	}
-	err = rows.Err()
+	var err = rows.Scan(&count)
 	if err != nil {
 		return 0, errors.Wrapf(err, "error while counting the files from the database.")
 	}
